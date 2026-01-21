@@ -7,27 +7,21 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted # <--- To kluczowe! Uruchamia to na Twoim serwerze
+    runs-on: self-hosted
     steps:
-      - name: Pobranie kodu (Checkout)
+      - name: Pobranie kodu
         uses: actions/checkout@v4
 
-      - name: Zbudowanie obrazu Docker
-        # Budujemy obraz z folderu 'client', nazywamy go 'beertaste-v2'
-        run: docker build -t beertaste-v2 ./client
+      - name: Zbudowanie obrazu (Pudełka)
+        # Budujemy obraz i nazywamy go beertaste-v2:latest
+        run: docker build -t beertaste-v2:latest ./client
 
-      - name: Zatrzymanie starej wersji (jeśli istnieje)
-        # || true sprawia, że jeśli nie ma starej wersji, to nie wywali błędu
-        run: docker stop beertaste-client || true
+      - name: Instalacja sterownika w folderze Projects
+        # Kopiujemy nasz plik prod.yml do folderu na serwerze jako docker-compose.yml
+        run: cp docker-compose.prod.yml ~/projects/beertaste-v2/docker-compose.yml
 
-      - name: Usunięcie starego kontenera
-        run: docker rm beertaste-client || true
-
-      - name: Uruchomienie nowej wersji
-        # Odpalamy na porcie 3000, z restartem automatycznym
+      - name: Uruchomienie z folderu Projects
+        # Wchodzimy do folderu projects/beertaste-v2 i odpalamy
+        working-directory: /home/wojciech/projects/beertaste-v2
         run: |
-          docker run -d \
-          --name beertaste-client \
-          --restart always \
-          -p 3000:3000 \
-          beertaste-v2
+          docker compose up -d --force-recreate
