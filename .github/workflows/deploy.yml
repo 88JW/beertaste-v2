@@ -1,0 +1,33 @@
+name: Deploy to Home Server
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted # <--- To kluczowe! Uruchamia to na Twoim serwerze
+    steps:
+      - name: Pobranie kodu (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Zbudowanie obrazu Docker
+        # Budujemy obraz z folderu 'client', nazywamy go 'beertaste-v2'
+        run: docker build -t beertaste-v2 ./client
+
+      - name: Zatrzymanie starej wersji (jeśli istnieje)
+        # || true sprawia, że jeśli nie ma starej wersji, to nie wywali błędu
+        run: docker stop beertaste-client || true
+
+      - name: Usunięcie starego kontenera
+        run: docker rm beertaste-client || true
+
+      - name: Uruchomienie nowej wersji
+        # Odpalamy na porcie 3000, z restartem automatycznym
+        run: |
+          docker run -d \
+          --name beertaste-client \
+          --restart always \
+          -p 3000:3000 \
+          beertaste-v2
