@@ -1,70 +1,104 @@
-# 📂 Podsumowanie Projektu: Beer Taste v2 (HomeLab + CI/CD)
+📂 Podsumowanie Projektu: Beer Taste v2 (HomeLab + CI/CD)
 
-**Data ostatniej aktualizacji:** 21.01.2026
-**Status:** 🟢 ONLINE (CI/CD w pełni sprawne)
+Ostatnia aktualizacja: 22.01.2026
+Status: 🟢 ONLINE (Infrastruktura gotowa, faza Development)
 
----
+1. Status Projektu i Infrastruktura
 
-## 1. Status Projektu
-Aplikacja **Next.js (v2)** została pomyślnie wdrożona na domowy serwer Linux.
-Uruchomiono pełny pipeline **CI/CD**: każda zmiana wysłana przez `git push` (na gałąź main) automatycznie przebudowuje i aktualizuje aplikację na serwerze w ciągu ok. 1-2 minut.
+Aplikacja Next.js (v15) została pomyślnie wdrożona na domowy serwer Linux. Uruchomiono pełny pipeline CI/CD.
 
----
+🖥️ Serwer i Sieć
 
-## 2. Architektura i Infrastruktura
+Adres IP: 192.168.50.234
 
-### 🖥️ Serwer
-* **Adres:** `192.168.50.234`
-* **OS:** Linux (Ubuntu/Debian)
-* **Lokalizacja aplikacji:** `~/projects/beertaste-v2`
-* **Port zewnętrzny:** `3005` (dostęp: http://192.168.50.234:3005)
+System operacyjny: Linux (Ubuntu/Debian)
 
-### 🤖 GitHub Runner (Agent)
-* **Typ:** Self-hosted runner działający w Dockerze.
-* **Ścieżka instalacji:** `~/github-runners`
-* **Uprawnienia:** Runner ma zamontowany wolumen hosta:
-    * `host: /home/wojciech/projects` ➡️ `container: /home/wojciech/projects`
-    * To pozwala mu zarządzać plikami w folderze projektów.
+Lokalizacja aplikacji: ~/projects/beertaste-v2
 
-### 📦 Aplikacja (Kontener)
-* **Technologia:** Next.js (Node.js v20-alpine).
-* **Metoda uruchamiania:** Obraz Docker budowany z kodu + `docker compose`.
-* **Zarządzanie:** Plik `docker-compose.yml` znajduje się fizycznie w `~/projects/beertaste-v2`.
+Port zewnętrzny: 3005 (Dostęp: http://192.168.50.234:3005)
 
----
+Baza danych: Supabase Self-Hosted (Docker) działający na tym samym IP.
 
-## 3. Workflow (Jak działa automat?)
+🤖 GitHub Runner (CI/CD)
 
-Plik sterujący: `.github/workflows/deploy.yml`
+Typ: Self-hosted runner (Docker).
 
-1.  **Czyszczenie:** Usuwa stare pliki tymczasowe z runnera.
-2.  **Checkout:** Pobiera najnowszy kod z GitHuba.
-3.  **Build:** Buduje obraz Docker `beertaste-v2:latest` z folderu `./client`.
-4.  **Konfiguracja:** Kopiuje plik `docker-compose.prod.yml` z repozytorium do folderu docelowego na serwerze (`~/projects/beertaste-v2/docker-compose.yml`).
-5.  **Deploy:** Wykonuje komendę w folderze projektu:
-    ```bash
-    docker compose up -d --force-recreate
-    ```
+Workflow: .github/workflows/deploy.yml automatycznie przebudowuje obraz Docker beertaste-v2:latest i restartuje kontener po każdym git push na gałąź main.
 
----
+2. Stack Technologiczny (Expert JS/TS Path)
 
-## 4. Kluczowe Pliki Konfiguracyjne
+Core
 
-| Plik | Lokalizacja w repo | Funkcja |
-| :--- | :--- | :--- |
-| `deploy.yml` | `.github/workflows/` | Skrypt automatyzacji (instrukcje dla Runnera). Używa ścieżek bezwzględnych. |
-| `docker-compose.prod.yml` | `root` | Definicja produkcji. Mapuje porty `3005:3000`. To ten plik ląduje na serwerze. |
-| `Dockerfile` | `client/` | Instrukcja budowania obrazu (zaktualizowano do **Node 20**). |
+Framework: Next.js 15 (App Router, katalog src/).
 
----
+Język: TypeScript (Strict mode).
 
-## 5. Aktualny Temat i Następne Kroki
+Manager paczek: pnpm.
 
-Zatrzymaliśmy się na wyborze **Bazy Danych** i backendu.
+Backend & Data
 
-**Decyzja do podjęcia:** Wybór technologii backendowej (Self-hosted).
-1.  **Supabase (Self-Hosted):** Pełny stack (baza, auth, api, storage), ale duże wymagania zasobowe (wiele kontenerów).
-2.  **PocketBase:** Lekka alternatywa (jeden plik/kontener), zawiera bazę SQLite, Auth i API. Idealne do HomeLab.
-3.  **Czysty PostgreSQL:** Rozwiązanie klasyczne, wymaga ręcznego napisania Auth i API w Next.js.
+Baza danych: PostgreSQL (część Supabase Self-Hosted).
 
-**Plan na start kolejnej sesji:** Wdrożenie wybranej bazy danych (lokalnie na serwerze) i podpięcie jej do aplikacji Beer Taste.
+Komunikacja z DB: @supabase/supabase-js (Supabase Client).
+
+Zarządzanie stanem: Zustand (Zarządzanie filtrowaniem, wyszukiwaniem i UI).
+
+Przechowywanie plików: Supabase Storage (Bucket: beer-photos).
+
+UI & UX
+
+Stylizacja: Tailwind CSS.
+
+Komponenty: shadcn/ui (nowoczesny design system).
+
+Mobilność: PWA (Progressive Web App - @ducanh2912/next-pwa).
+
+3. Status Danych (Migration Complete)
+
+Dane zostały pomyślnie zmigrowane z formatu JSON do relacyjnej bazy SQL.
+
+Tabela: public.reviews
+
+Liczba rekordów: 129 wierszy.
+
+Kolumny kluczowe:
+
+ratings (JSONB) - kompleksowe oceny smaku, aromatu itp.
+
+photo_url - linki do fizycznych plików JPG w Storage.
+
+tasting_date (timestamptz) - daty degustacji.
+
+Pliki: 129 zdjęć wgranych do Bucketu beer-photos.
+
+4. Planowana Architektura Kodu (src/)
+
+src/app/ - Strony (Server Components) i routing.
+
+src/components/ - Komponenty UI (shadcn) i biznesowe.
+
+src/lib/ - Inicjalizacja klienta Supabase i narzędzia pomocnicze.
+
+src/store/ - Sklepy Zustand (np. useBeerStore.ts).
+
+src/types/ - Definicje typów TS generowane z bazy Supabase.
+
+5. Następne Kroki (Roadmap)
+
+Konfiguracja PWA: Dodanie manifestu, ikon i Service Workera (Kluczowe dla mobilności).
+
+Type Safety: Wygenerowanie typów TS z bazy Supabase (npx supabase gen types).
+
+Zustand Setup: Stworzenie store'a do obsługi globalnej wyszukiwarki piw.
+
+UI Development: Budowa głównego Dashboardu z galerią kart (shadcn + Next Image).
+
+Filtrowanie: Implementacja dynamicznego filtrowania piw po ocenach i stylach.
+
+6. Wytyczne dla Mentora AI
+
+Pracujemy w trybie Expert Full-Stack (JS/TS).
+
+Kod musi być czysty, typowany i gotowy do działania w środowisku Dockerowym.
+
+Nic na szybko - czekaj na potwierdzenie każdego etapu.
