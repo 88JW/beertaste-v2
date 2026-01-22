@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+build/
 
 # production
 /build
@@ -39,3 +40,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Menedżery paczek (to usunie te 1800 plików z listy)
+node_modules/
+.pnpm-debug.log*
+
+# Środowisko (Twoje tajne klucze - nie chcemy ich w Git!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Systemowe
+.DS_Store
+thumbs.db
+
