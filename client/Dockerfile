@@ -32,6 +32,7 @@ RUN pnpm build
 FROM base AS runner
 WORKDIR /app
 
+
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
