@@ -29,8 +29,15 @@ jobs:
           echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
 
-      - name: Uruchomienie z folderu Projects
+      - name: Siłowe zwolnienie portu 3005
+        run: |
+          # Usuwamy kontener uruchomiony ręcznie, który nie należy do Compose
+          docker stop beertaste-client || true
+          docker rm beertaste-client || true
+
+      - name: Uruchomienie z folderu Projects (Docker Compose)
         working-directory: /home/wojciech/projects/beertaste-v2
         run: |
+          # Compose wyłączy swoje stare kontenery, a potem postawi nowe
           docker compose down || true
           docker compose up -d --force-recreate
