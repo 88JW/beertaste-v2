@@ -1,12 +1,15 @@
 services:
   client:
     image: beertaste-v2:latest
+    container_name: beertaste-v2-client-1
     ports:
       - "3005:3000"
-    environment:
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-    # Tu w przyszłości dodasz volumes, np. dla zdjęć
-    # volumes:
-    #   - ./uploads:/app/public/uploads
+    env_file: .env
+    networks:
+      - supabase_default # Łączymy z Twoją siecią Supabase
+    restart: always
+
+networks:
+  supabase_default:
+    external: true # Informujemy, że sieć już istnieje na serwerze
     
