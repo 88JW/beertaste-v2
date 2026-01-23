@@ -1,12 +1,11 @@
 services:
-  app:
-    container_name: beertaste-client
-    image: beertaste-v2:latest # Używamy obrazu, który zbuduje automat
-    restart: always
+  client:
+    image: beertaste-v2:latest
     ports:
-      - "3005:3000" # Port zewnętrzny 3005
+      - "3005:3000"
     environment:
-      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
     # Tu w przyszłości dodasz volumes, np. dla zdjęć
     # volumes:
     #   - ./uploads:/app/public/uploads
