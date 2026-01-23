@@ -1,7 +1,4 @@
 {
-	"dependencies": {
-		"@supabase/supabase-js": "^2.91.0"
-	},
 	"devDependencies": {
 		"pg-to-ts": "^4.1.1"
 	}
