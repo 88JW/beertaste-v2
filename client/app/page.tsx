@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic' // To naprawi build!
+
 import { supabase } from '../lib/supabase'
 
 // Definiujemy kształt danych, aby TS nie zgadywał
