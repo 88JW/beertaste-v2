@@ -19,11 +19,17 @@ jobs:
         run: docker build -t beertaste-v2:latest ./client
 
       - name: Instalacja sterownika w folderze Projects
-        # 👇 ZMIANA: Używamy pełnej ścieżki /home/wojciech/...
-        run: cp docker-compose.prod.yml /home/wojciech/projects/beertaste-v2/docker-compose.yml
+        run: |
+          mkdir -p /home/wojciech/projects/beertaste-v2
+          cp docker-compose.prod.yml /home/wojciech/projects/beertaste-v2/docker-compose.yml
+
+      - name: Tworzenie pliku .env dla aplikacji
+        working-directory: /home/wojciech/projects/beertaste-v2
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
 
       - name: Uruchomienie z folderu Projects
-        # 👇 ZMIANA: Tutaj też pełna ścieżka
         working-directory: /home/wojciech/projects/beertaste-v2
         run: |
           docker compose down || true
