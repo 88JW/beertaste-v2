@@ -1,6 +1,6 @@
-export const dynamic = 'force-dynamic' // To naprawi build!
+export const dynamic = 'force-dynamic'; // To blokuje próby połączenia z bazą podczas budowy
 
-import { supabase } from '../lib/supabase'
+import { supabase } from '../lib/supabase';
 
 // Definiujemy kształt danych, aby TS nie zgadywał
 interface BeerReview {

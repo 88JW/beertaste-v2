@@ -1,10 +1,7 @@
-
 import { createClient } from '@supabase/supabase-js'
-import { Database } from '@/types/supabase'
 
-// Pobieramy dane z Twojego pliku .env.local
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Pobieramy zmienne, ale dodajemy "placeholder", żeby build nie wybuchł
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 
-// Tworzymy otypowanego klienta
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
