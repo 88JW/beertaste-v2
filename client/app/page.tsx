@@ -7,9 +7,16 @@ interface BeerReview {
   id: string | number;
   beer_name: string;
   brewery: string;
-  rating: number;
+  ratings?: {
+    aroma?: number;
+    taste?: number;
+    mouthfeel?: number;
+    appearance?: number;
+  };
   created_at: string;
-  comment?: string;
+  note?: string;
+  photo_url?: string;
+  tasting_date?: string;
 }
 
 export default async function Home() {
@@ -28,26 +35,46 @@ export default async function Home() {
   }
 
   return (
-    <main className="p-10 bg-stone-50 min-h-screen">
+    <main className="p-10 bg-gray-400 min-h-screen">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-5xl font-black mb-4 text-stone-900">🍻 BeerTaste v2</h1>
-        <p className="text-stone-500 mb-10 italic">Twoje archiwum 129 recenzji ożyło!</p>
+        <h1 className="text-5xl font-black mb-4 text-white">🍻 BeerTaste v2</h1>
+        <p className="text-white mb-10 italic">Twoje archiwum 129 recenzji ożyło!</p>
         
         <div className="space-y-4">
-          {reviews?.map((review) => (
-            <div key={review.id} className="p-6 bg-white rounded-2xl shadow-sm border border-stone-200">
-              <h2 className="text-xl font-bold text-stone-800">{review.beer_name}</h2>
-              <p className="text-stone-500">{review.brewery}</p>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-bold">
-                  ⭐ {review.rating}/10
-                </span>
-                <span className="text-xs text-stone-400">
-                  {new Date(review.created_at).toLocaleDateString('pl-PL')}
-                </span>
+          {reviews?.map((review) => {
+            const avgRating = review.ratings 
+              ? Math.round(
+                  (Object.values(review.ratings).reduce((a, b) => (a || 0) + (b || 0), 0) / 
+                  Object.values(review.ratings).filter(v => v != null).length) * 10
+                ) / 10
+              : 0;
+            
+            return (
+              <div key={review.id} className="p-6 bg-white rounded-2xl shadow-sm border border-stone-200">
+                <div className="flex gap-4">
+                  {review.photo_url && (
+                    <img 
+                      src={review.photo_url} 
+                      alt={review.beer_name}
+                      className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-stone-800">{review.beer_name}</h2>
+                    <p className="text-stone-500">{review.brewery}</p>
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-bold">
+                        ⭐ {avgRating}/5
+                      </span>
+                      <span className="text-xs text-stone-400">
+                        {new Date(review.tasting_date || review.created_at).toLocaleDateString('pl-PL')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </main>

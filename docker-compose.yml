@@ -1,0 +1,19 @@
+services:
+  client:
+    build: .
+    container_name: beertaste-v2-client
+    ports:
+      - "3005:3000"
+    env_file: .env
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - supabase_default
+    restart: always
+    command: pnpm run dev
+
+networks:
+  supabase_default:
+    external: true
+
