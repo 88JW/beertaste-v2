@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic'; // To blokuje próby połączenia z bazą podczas budowy
 
 import { supabase } from '../lib/supabase';
+import AuthGuard from '@/components/AuthGuard';
+import LogoutButton from '@/components/LogoutButton';
 
 // Definiujemy kształt danych, aby TS nie zgadywał
 interface BeerReview {
@@ -71,10 +73,14 @@ export default async function Home() {
   }
 
   return (
-    <main className="p-10 bg-gray-400 min-h-screen">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-5xl font-black mb-4 text-white">🍻 BeerTaste v2</h1>
-        <p className="text-white mb-10 italic">Twoje archiwum 129 recenzji ożyło!</p>
+    <AuthGuard>
+      <main className="p-10 bg-gray-400 min-h-screen">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-5xl font-black text-white">🍻 BeerTaste v2</h1>
+            <LogoutButton />
+          </div>
+          <p className="text-white mb-10 italic">Twoje archiwum 129 recenzji ożyło!</p>
         
         <div className="space-y-4">
           {reviews?.map((review) => {
@@ -114,5 +120,6 @@ export default async function Home() {
         </div>
       </div>
     </main>
+    </AuthGuard>
   )
 }

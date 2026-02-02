@@ -1,28 +1,21 @@
 import type { NextConfig } from "next";
-import withSerwistInit from "@serwist/next";
-
-const withSerwist = withSerwistInit({
-  swSrc: "app/sw.ts",
-  swDest: ".next/static/sw.js",
-  cacheOnNavigation: true,
-  reloadOnOnline: true,
-  disable: process.env.NODE_ENV === "development",
-});
+import { InjectManifest } from "workbox-webpack-plugin";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  async rewrites() {
-    return [
-      {
-        source: "/sw.js",
-        destination: "/_next/static/sw.js",
-      },
-      {
-        source: "/sw.js.map",
-        destination: "/_next/static/sw.js.map",
-      },
-    ];
+  webpack: (config, { isServer, dev }) => {
+    // Add Workbox plugin only for client-side production builds
+    if (!isServer && !dev) {
+      config.plugins.push(
+        new InjectManifest({
+          swSrc: "./public/sw.js",
+          swDest: "../static/sw.js",
+          exclude: [/\.map$/, /^manifest.*\.js$/],
+        })
+      );
+    }
+    return config;
   },
 };
 
-export default withSerwist(nextConfig);
+export default nextConfig;
