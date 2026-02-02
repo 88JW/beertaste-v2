@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import PWARegister from "@/components/PWARegister";
 import { AuthProvider } from "@/lib/auth";
 
 const geistSans = Geist({
@@ -56,7 +55,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <PWARegister />
           {children}
         </AuthProvider>
       </body>
