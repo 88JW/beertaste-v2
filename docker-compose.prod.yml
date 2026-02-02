@@ -1,15 +1,23 @@
 services:
   client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
     image: beertaste-v2:latest
     container_name: beertaste-v2-client-1
+    # Port 3005 - do konfiguracji w Traefik na Lenovo
     ports:
       - "3005:3000"
-    env_file: .env
+    environment:
+      - NODE_ENV=production
     networks:
-      - supabase_default # Łączymy z Twoją siecią Supabase
+      - supabase_default
     restart: always
 
 networks:
   supabase_default:
-    external: true # Informujemy, że sieć już istnieje na serwerze
+    external: true
     
