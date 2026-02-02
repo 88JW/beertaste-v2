@@ -20,18 +20,54 @@ interface BeerReview {
 }
 
 export default async function Home() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return (
+      <main className="p-10 bg-gray-400 min-h-screen">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-black mb-4 text-white">🍻 BeerTaste v2</h1>
+          <p className="text-white">
+            Brak konfiguracji Supabase. Ustaw
+            {' '}NEXT_PUBLIC_SUPABASE_URL i
+            {' '}NEXT_PUBLIC_SUPABASE_ANON_KEY.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   // Wykonujemy zapytanie
-  const { data, error } = await supabase
-    .from('reviews')
-    .select('*')
-    .limit(10)
-    .order('created_at', { ascending: false })
+  let data = null as any;
+  let error: { message: string } | null = null;
+
+  try {
+    const response = await supabase
+      .from('reviews')
+      .select('*')
+      .limit(10)
+      .order('created_at', { ascending: false });
+
+    data = response.data;
+    error = response.error ? { message: response.error.message } : null;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Nieznany błąd';
+    error = { message };
+  }
 
   // Rzutujemy dane na nasz interfejs (to uciszy błąd 'never')
   const reviews = data as BeerReview[] | null;
 
   if (error) {
-    return <div className="p-10 text-red-500">Błąd: {error.message}</div>
+    return (
+      <main className="p-10 bg-gray-400 min-h-screen">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-black mb-4 text-white">🍻 BeerTaste v2</h1>
+          <p className="text-red-200">Błąd: {error.message}</p>
+        </div>
+      </main>
+    );
   }
 
   return (

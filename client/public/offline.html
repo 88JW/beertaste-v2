@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <title>BeerTaste v2 – Offline</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 24px;
+    }
+    .card {
+      max-width: 420px;
+      width: 100%;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    h1 { margin: 0 0 12px; font-size: 24px; }
+    p { margin: 0 0 16px; line-height: 1.5; color: #d1d5db; }
+    button {
+      appearance: none;
+      border: none;
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #111827;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.35);
+    }
+    button:hover { filter: brightness(1.05); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Jesteś offline</h1>
+    <p>Połącz się ponownie z siecią, aby załadować najnowsze recenzje piw. Gdy wróci internet, spróbuj odświeżyć stronę.</p>
+    <button type="button" onclick="location.reload()">Spróbuj ponownie</button>
+  </div>
+</body>
+</html>

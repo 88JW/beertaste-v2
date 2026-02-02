@@ -17,7 +17,10 @@ COPY client/ .
 # Budujemy aplikację Next.js
 RUN pnpm run build
 
+# Kopiujemy public do standalone (fix dla PWA + standalone)
+RUN cp -r public .next/standalone/public
+
 EXPOSE 3000
 
-# Startujemy aplikację
-CMD ["node", ".next/standalone/server.js"]
+# Startujemy aplikację (bez standalone, normalny start)
+CMD ["pnpm", "start"]

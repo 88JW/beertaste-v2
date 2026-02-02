@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BeerTaste v2 - Client (Next.js 15)
 
-## Getting Started
+Nowoczesny frontend dla aplikacji do katalogowania i recenzowania piw. Zbudowany w Next.js 15 z TypeScript i Tailwind CSS.
 
-First, run the development server:
+## 🚀 Uruchomienie
 
+### Docker (Zalecane)
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Z głównego katalogu projektu
+docker compose up -d
+# Aplikacja dostępna na http://localhost:3005
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Lokalnie (Development)
+```bash
+cd client
+pnpm install
+pnpm dev
+# Otwórz http://localhost:3000
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📦 Stack Technologiczny
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework:** Next.js 15 (App Router)
+- **Język:** TypeScript
+- **Stylowanie:** Tailwind CSS
+- **Backend:** Supabase (PostgreSQL + Storage)
+- **Konteneryzacja:** Docker
 
-## Learn More
+## 🏗️ Struktura
 
-To learn more about Next.js, take a look at the following resources:
+```
+client/
+├── app/              # App Router (Next.js 15)
+│   ├── page.tsx     # Strona główna - lista recenzji
+│   ├── layout.tsx   # Globalny layout
+│   └── globals.css  # Style Tailwind
+├── lib/
+│   └── supabase.ts  # Konfiguracja klienta Supabase
+├── types/           # TypeScript types
+└── public/          # Statyczne pliki
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Funkcjonalności
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- ✅ Wyświetlanie 10 najnowszych recenzji piw
+- ✅ Zdjęcia piw z Supabase Storage (129 zdjęć JPG)
+- ✅ Obliczanie średniej oceny z 4 kryteriów (aroma, taste, mouthfeel, appearance)
+- ✅ Responsywny design z Tailwind CSS
+- ✅ Server-Side Rendering (SSR)
 
-## Deploy on Vercel
+## 🔧 Konfiguracja
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Utwórz plik `.env` w głównym katalogu projektu:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Dla Docker (wewnętrzna sieć)
+NEXT_PUBLIC_SUPABASE_URL=http://supabase-kong:8000
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+Lub dla lokalnego developmentu:
+
+```bash
+# Dla localhost
+NEXT_PUBLIC_SUPABASE_URL=http://localhost:8000
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+## 📊 Dane
+
+Aplikacja korzysta z:
+- **Tabela:** `reviews` (129 rekordów)
+- **Storage bucket:** `beer-photos` (129 zdjęć JPG, ~171KB każde)
+- **Format ratings:** JSONB z polami: aroma, taste, mouthfeel, appearance
+
+## 🔜 Roadmapa
+
+- [ ] Wygenerować typy TypeScript z Supabase
+- [ ] Zamienić `<img>` na `next/image`
+- [ ] Dodać paginację (pokazać wszystkie 129 recenzji)
+- [ ] Stworzyć komponent `BeerCard`
+- [ ] Dodać wyszukiwarkę i filtry
+- [ ] Formularz dodawania nowych recenzji
+- [ ] PWA setup (manifest, service worker)
+
+## 📝 Więcej informacji
+
+Zobacz główną dokumentację projektu:
+- [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
+- [Roadmapa Rozwoju BeerTaste v2.md](../Roadmapa%20Rozwoju%20BeerTaste%20v2.md)
+

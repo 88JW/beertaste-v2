@@ -40,6 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# PWA - Service Worker
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+
 # Menedżery paczek (to usunie te 1800 plików z listy)
 node_modules/
 .pnpm-debug.log*

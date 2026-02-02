@@ -13,31 +13,36 @@ To jest dokumentacja techniczna i plan wdrożenia "krok po kroku" dla projektu *
 
 ---
 
-## 🏗️ Faza 1: Fundamenty i Bezpieczeństwo Typów (Type Safety)
+## 🏗️ Faza 1: Fundamenty i Bezpieczeństwo Typów (Type Safety) ✅ **UKOŃCZONA**
 
-**Cel:** Połączenie aplikacji z bazą i wyeliminowanie błędów `any` w TypeScript.
+**Status:** Połączenie z bazą działa, aplikacja wyświetla dane.
 
-**Konfiguracja zmiennych środowiskowych:**
+### Co zostało zrobione:
 
-Utwórz plik `.env.local` i zdefiniuj:
+**✅ Konfiguracja zmiennych środowiskowych:**
+- Utworzono plik `.env` z konfiguracją Supabase
+- URL: `http://supabase-kong:8000` (dla Docker network)
+- Anon Key skonfigurowany
 
-```text
-# .env.local
-NEXT_PUBLIC_SUPABASE_URL=https://192.168.50.234
-NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxx
-```
+**✅ Klient Supabase:**
+- Zaimplementowano `client/lib/supabase.ts` z createClient
+- Obsługa placeholder dla build time
 
-**Generowanie typów (The Expert Way):**
+**✅ Migracja danych:**
+- 129 recenzji zaimportowanych do tabeli `reviews`
+- 129 zdjęć skonwertowanych z base64 do JPG (~171KB każde)
+- Upload do Supabase Storage bucket `beer-photos`
+- Wszystkie rekordy mają `photo_url` wskazujący na Storage
 
-```bash
-npx supabase gen types typescript --local > src/types/supabase.ts
-```
+**✅ Strona główna:**
+- Server Component pobierający 10 najnowszych recenzji
+- Wyświetlanie zdjęć obok recenzji (24x24px, rounded)
+- Obliczanie średniej oceny z JSONB `ratings` (aroma, taste, mouthfeel, appearance)
+- Formatowanie daty w formacie polskim
 
-Celem jest pełne autouzupełnianie pól tabeli `reviews` w VS Code.
-
-**Inicjalizacja klienta Supabase:**
-
-Zaimplementuj `src/lib/supabase.ts` korzystając z wygenerowanego interfejsu `Database`.
+### ⚠️ Do dopracowania:
+- [ ] Wygenerować typy TypeScript z Supabase CLI
+- [ ] Zastąpić `any` typami z `Database` interface
 
 ---
 
@@ -51,14 +56,24 @@ Zaimplementuj `src/lib/supabase.ts` korzystając z wygenerowanego interfejsu `Da
 
 ---
 
-## 🍺 Faza 3: Wyświetlanie i Optymalizacja Danych
+## 🍺 Faza 3: Wyświetlanie i Optymalizacja Danych — **W TRAKCIE** 🔄
 
-**Cel:** Ożywienie 129 zmigrowanych recenzji.
+**Status:** Podstawowe wyświetlanie działa, trwa optymalizacja.
 
-- **Server Components Fetching:** Pobieraj dane bezpośrednio w `page.tsx` (optymalizacja pod szybkość).
-- **Komponent `BeerCard`:** Korzystaj z `next/image` do serwowania zdjęć z Supabase Storage (lazy loading, optymalizacja wagi).
-- **Parsowanie `jsonb` `ratings`:** Przekształć dane do czytelnych statystyk.
-- **Wyszukiwarka "Real-time":** Połącz input z Zustandem i filtruj listę po stronie klienta.
+### ✅ Zrealizowane:
+- **Server Components Fetching:** Dane pobierane bezpośrednio w `page.tsx`
+- **Wyświetlanie zdjęć:** Zdjęcia z Supabase Storage (obecnie `<img>`, 24x24px)
+- **Parsowanie `jsonb` `ratings`:** Obliczanie średniej z 4 kryteriów z zaokrągleniem
+- **Limit:** Wyświetlanie 10 najnowszych recenzji
+
+### 📋 TODO:
+- [ ] Zamienić `<img>` na `next/image` (lazy loading, optymalizacja)
+- [ ] Zwiększyć rozmiar zdjęć (obecnie 24x24px, zbyt małe)
+- [ ] Stworzyć dedykowany komponent `BeerCard`
+- [ ] Dodać paginację lub infinite scroll (pokazać wszystkie 129)
+- [ ] Wyszukiwarka real-time (po nazwie piwa/browaru)
+- [ ] Filtry (styl, zakres ocen)
+- [ ] Sortowanie (data, ocena, nazwa)
 
 ---
 
